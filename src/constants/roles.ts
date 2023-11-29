@@ -1,11 +1,10 @@
 export enum UserRole {
-	SUPERADMIN = 'superadmin',
-	USER = 'user',
-	ALL = 'all'
+  SUPERADMIN = "superadmin",
+  USER = "user",
+  ALL = "all",
 }
 
-
 export enum ChatRoomRole {
-	ADMIN = 'admin',
-	MEMBER = 'member',
+  ADMIN = "admin",
+  MEMBER = "member",
 }
