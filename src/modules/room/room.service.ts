@@ -6,7 +6,10 @@ import { User } from 'modules/user/user.entity';
 
 @Injectable()
 export class RoomService extends TypeOrmCrudService<Room> {
-    constructor(@Inject(ROOM_REPO) repo) {
+    constructor(
+        @Inject(ROOM_REPO) repo,
+        
+    ) {
         super(repo);
     }
 
@@ -18,11 +21,9 @@ export class RoomService extends TypeOrmCrudService<Room> {
           members: [...new Set([user, ...room.members])]
         
         }
-    
-        console.log('data: create : ', data)
-    
-        return this.repo.save(data);
-      }
+
+       return this.repo.save(data);
+    }
 
   
   }

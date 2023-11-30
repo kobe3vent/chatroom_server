@@ -15,7 +15,7 @@ export enum MessageType {
 @Entity()
 export class Message  extends AbstractEntity {
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', nullable: true })
 	subject: string;
 
     @IsNotEmpty()
