@@ -19,6 +19,7 @@ export class User extends AbstractEntity {
 	@Column({ type: 'varchar', unique: true })
 	username: string;
 
+	//TODO: dont expose
 	@Column({ type: 'varchar'})
 	password: string;
 

@@ -17,7 +17,8 @@ import { User } from 'modules/user/user.entity';
     join: {
       room: {eager: true},
 	  author: {eager: true},
-	  //seenBy: {eager: true}
+	  seenBy: {eager: true},
+	  parentMessage: {eager: true}
 	},
   },
   routes: {
@@ -42,8 +43,6 @@ export class MessageController implements CrudController<Message>  {
 
   @Override()
 	createOne(@AuthUser() user: User, @ParsedBody() dto : Partial<Message>): Promise<Message> {
-    console.log('user: ', user)
-    console.log('data: ', dto)
 		return this.service.create(user, dto);
 	}
 

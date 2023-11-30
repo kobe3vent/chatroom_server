@@ -24,6 +24,7 @@ export class Room extends AbstractEntity {
     messages:Message[];
 
     @ManyToMany(() => User)
+    @JoinTable()
     admin: User[]
     
 }

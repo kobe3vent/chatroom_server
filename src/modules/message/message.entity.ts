@@ -2,7 +2,7 @@ import { IsNotEmpty, IsUUID } from "class-validator";
 import { AbstractEntity } from "common/entities/abstract.entity";
 import { Room } from "modules/room/room.entity";
 import { User } from "modules/user/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne } from "typeorm";
 
 export enum MessageType {
     TEXT = 'text',
@@ -40,7 +40,8 @@ export class Message  extends AbstractEntity {
 	*/
 
     @IsUUID()
-    @ManyToOne(() => Message)
+    @OneToOne(() => Message)
+    @JoinColumn()
 	parentMessage: Message;
 
     @IsUUID()
@@ -51,7 +52,8 @@ export class Message  extends AbstractEntity {
     @ManyToOne(() => Room , (room: Room) => room.messages)
     room: Room
 
-    @OneToMany(() => User, (user: User) => user)
+    @ManyToMany(() => User)
+    @JoinTable()
     seenBy: User[]
 
 }
