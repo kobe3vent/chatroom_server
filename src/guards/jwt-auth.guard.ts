@@ -14,10 +14,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(err, user, info) {
-    // If authentication fails, we throw an UnauthorizedException so that
-    if (err || !user) {
-      throw err || new UnauthorizedException();
-    }
-    return user;
+    return (err || !user) ? new UnauthorizedException() : user;
   }
 }

@@ -11,8 +11,6 @@ import { UserModule } from "modules/user/user.module";
   imports: [
     PassportModule.register({
       defaultStrategy: "jwt",
-      property: "user",
-      session: false,
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

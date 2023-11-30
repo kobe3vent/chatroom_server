@@ -1,10 +1,11 @@
-import { BeforeInsert, Column, Entity} from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToMany, OneToMany} from 'typeorm';
 import { AbstractEntity } from 'common/entities/abstract.entity';
 import { IsEmail, IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@nestjsx/crud';
 import { UserRole } from 'constants/roles';
 import { UserStatus } from 'constants/status';
-import { generateHash } from 'utils';
+import { generateHash } from 'helpers/utils';
+import { Room } from 'modules/room/room.entity';
 
 const { UPDATE } = CrudValidationGroups;
 @Entity()
@@ -30,5 +31,16 @@ export class User extends AbstractEntity {
     async hashPassword(): Promise<void> {
         this.password = generateHash(this.password);
     }
+	
+
+	/**
+	 * Relations
+	*/
+
+	@ManyToMany(() => Room, (room: Room) => room.members, {
+		cascade: true,
+	})
+	rooms: Room[];
+	
 
 }

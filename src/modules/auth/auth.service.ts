@@ -1,7 +1,8 @@
-import { HttpException, Injectable, Logger } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { validateHash } from "helpers/utils";
 import { UserService } from "modules/user/user.service";
-import { validateHash } from "utils";
+
 
 @Injectable()
 export class AuthService {

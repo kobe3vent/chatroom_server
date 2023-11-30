@@ -5,12 +5,17 @@ import { contextMiddleware } from 'middlewares/context.middleware';
 import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { DatabaseModule } from 'modules/db/db.module';
 import { AuthModule } from 'modules/auth/auth.module';
+import { RoomModule } from 'modules/room/room.module';
+
 
 @Module({
   imports: [
     DatabaseModule,
     AuthModule,
-    UserModule],
+    UserModule,
+    RoomModule
+  
+  ],
   controllers: [AppController],
   providers: [],
 })
