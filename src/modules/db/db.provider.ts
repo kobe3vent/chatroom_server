@@ -11,7 +11,7 @@ export const databaseProviders = [
         port: 3306,
         username: 'root',
         password: 'root',
-        database: 'test',
+        database: 'bealy',
         entities: [
             __dirname + '/../**/*.entity{.ts,.js}',
         ],

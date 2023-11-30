@@ -2,17 +2,17 @@ import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'type
 
 export abstract class AbstractEntity {
 	@PrimaryGeneratedColumn('uuid')
-	uuid: string;
+	id: string;
 
 	// @Exclude()
 	@CreateDateColumn({
-		type: 'timestamp with time zone',
+		type: 'timestamp',
 	})
 	createdAt: Date;
 
 	// @Exclude()
 	@UpdateDateColumn({
-		type: 'timestamp with time zone',
+		type: 'timestamp',
 	})
 	updatedAt: Date;
 }

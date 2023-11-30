@@ -9,15 +9,15 @@ import { generateHash } from 'utils';
 const { UPDATE } = CrudValidationGroups;
 @Entity()
 export class User extends AbstractEntity {
-	@Column({ unique: true, type: 'text' })
+	@Column({ unique: true, type: 'varchar'})
 	@IsEmail()
 	@IsOptional({ groups: [UPDATE] })
 	email: string;
 
-	@Column({ type: 'text' })
+	@Column({ type: 'varchar', unique: true })
 	username: string;
 
-	@Column({ type: 'text' })
+	@Column({ type: 'varchar'})
 	password: string;
 
 	@Column({ type: 'enum', enum: UserRole, default: UserRole.USER })

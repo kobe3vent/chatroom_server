@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { getAction } from '@nestjsx/crud';
+import { UserRole } from 'constants/roles';
 import { User } from 'modules/user/user.entity';
 
 @Injectable()
@@ -49,6 +50,6 @@ export class RestCrudGuard implements CanActivate {
 
 	checkRole(rolesPermittedForRoute: string[]): boolean {
 		if (rolesPermittedForRoute.length === 0) return false;
-		return rolesPermittedForRoute.includes(this.currentUser.role);
+		return rolesPermittedForRoute.includes(UserRole.ALL) || rolesPermittedForRoute.includes(this.currentUser.role);
 	}
 }
