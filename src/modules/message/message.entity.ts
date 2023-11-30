@@ -1,10 +1,10 @@
-import { IsUUID } from "class-validator";
+import { IsNotEmpty, IsUUID } from "class-validator";
 import { AbstractEntity } from "common/entities/abstract.entity";
 import { Room } from "modules/room/room.entity";
 import { User } from "modules/user/user.entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
 
-enum MessageType {
+export enum MessageType {
     TEXT = 'text',
     AUDIO = 'audio',
     VIDEO = 'video',
@@ -13,11 +13,12 @@ enum MessageType {
 }
 
 @Entity()
-export class Message  extends AbstractEntity{
+export class Message  extends AbstractEntity {
 
     @Column({ type: 'varchar' })
 	subject: string;
 
+    @IsNotEmpty()
     @Column({ type: 'varchar' })
 	body: string;
 
@@ -26,28 +27,28 @@ export class Message  extends AbstractEntity{
 
     @Column({
 		type: 'timestamp',
+        default: null
 	})
     expirationDate: Date;
 
-    @Column({type: 'boolean'})
+    @Column({type: 'boolean', default: false})
     deletedByAuthor: boolean;
-
-
 
 
     /**
 	 * Relations
 	*/
 
-    @OneToOne(() => Message)
+    @IsUUID()
+    @ManyToOne(() => Message)
 	parentMessage: Message;
 
     @IsUUID()
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, (user: User) => user.sentMessages)
     author: User
 
     @IsUUID()
-    @ManyToOne(() => Room)
+    @ManyToOne(() => Room , (room: Room) => room.messages)
     room: Room
 
     @OneToMany(() => User, (user: User) => user)

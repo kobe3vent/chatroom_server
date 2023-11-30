@@ -871,6 +871,36 @@
     picocolors "^1.0.0"
     tslib "^2.6.0"
 
+"@rewiko/crud-request@^5.1.12":
+  version "5.1.12"
+  resolved "https://registry.yarnpkg.com/@rewiko/crud-request/-/crud-request-5.1.12.tgz#0f3f128c08de47da68e474b3f18e4c2601900a1e"
+  integrity sha512-lnmtoYo2xFn4uCmnG6+F85AWiCa5BvWmmFg2ywOmJm/zXFnxHTDr6MuQneJhqS5QVg+3TDSPoG5VSTvvjnn6dw==
+  dependencies:
+    "@rewiko/util" "^5.1.12"
+    qs "^6.8.0"
+
+"@rewiko/crud-typeorm@^5.1.12":
+  version "5.1.12"
+  resolved "https://registry.yarnpkg.com/@rewiko/crud-typeorm/-/crud-typeorm-5.1.12.tgz#4ac85ed5cf90b82444dbd8642b0a1a239f5aac94"
+  integrity sha512-hJeMVS66i3urMpCZKNQaV/dFfrxgtWBI1bwoVSZSB31HuNzv41RtHLBzale82q9yo/HTKzZ+LwMP51MV+JLDNg==
+  dependencies:
+    "@zmotivat0r/o0" "^1.0.2"
+
+"@rewiko/crud@^5.1.12":
+  version "5.1.12"
+  resolved "https://registry.yarnpkg.com/@rewiko/crud/-/crud-5.1.12.tgz#f512aaf511a6c17eaaf2adb5fb9ccff5aae6c97e"
+  integrity sha512-wG7ROBzdFi/E/fpxYkQ8M3N+0ZO3kzjkLzfAcpZSATUEjR+5Dnh3pzpVO2Bk7dwyswLJOpA0vhSSc+kauU+d2A==
+  dependencies:
+    "@rewiko/crud-request" "^5.1.12"
+    "@rewiko/util" "^5.1.12"
+    deepmerge "^3.2.0"
+    pluralize "^8.0.0"
+
+"@rewiko/util@^5.1.12":
+  version "5.1.12"
+  resolved "https://registry.yarnpkg.com/@rewiko/util/-/util-5.1.12.tgz#d0b95824485a57f0e0d366f4d75bd06cd1f1380d"
+  integrity sha512-lf0B6lZGwo0aGmI8MmHTVhhe7DN288aPTzawmfoFLaLXsf8Dxr0WBZu/uTLCqLsCFQ/rOGdwZZN0XrNMclIlJQ==
+
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
@@ -977,9 +1007,9 @@
     "@types/estree" "*"
 
 "@types/eslint@*":
-  version "8.44.7"
-  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-8.44.7.tgz#430b3cc96db70c81f405e6a08aebdb13869198f5"
-  integrity sha512-f5ORu2hcBbKei97U73mf+l9t4zTGl74IqZ0GQk4oVea/VS8tQZYkUveSYojk+frraAVYId0V2WC9O4PTNru2FQ==
+  version "8.44.8"
+  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-8.44.8.tgz#f4fe1dab9b3d3dd98082d4b9f80e59ab40f1261c"
+  integrity sha512-4K8GavROwhrYl2QXDXm0Rv9epkA8GBFu0EI+XrrnnuCl7u8CWBRusX7fXJfanhZTDWSAL24gDI/UqXyUM0Injw==
   dependencies:
     "@types/estree" "*"
     "@types/json-schema" "*"

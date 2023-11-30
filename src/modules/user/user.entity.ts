@@ -1,11 +1,12 @@
-import { BeforeInsert, Column, Entity, ManyToMany, OneToMany} from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany} from 'typeorm';
 import { AbstractEntity } from 'common/entities/abstract.entity';
 import { IsEmail, IsOptional } from 'class-validator';
-import { CrudValidationGroups } from '@nestjsx/crud';
+import { CrudValidationGroups } from '@rewiko/crud';
 import { UserRole } from 'constants/roles';
 import { UserStatus } from 'constants/status';
 import { generateHash } from 'helpers/utils';
 import { Room } from 'modules/room/room.entity';
+import { Message } from 'modules/message/message.entity';
 
 const { UPDATE } = CrudValidationGroups;
 @Entity()
@@ -37,10 +38,9 @@ export class User extends AbstractEntity {
 	 * Relations
 	*/
 
-	@ManyToMany(() => Room, (room: Room) => room.members, {
-		cascade: true,
-	})
+	@ManyToMany(() => Room, (room: Room) => room.members)
 	rooms: Room[];
 	
-
+	@OneToMany(()=> Message, (msg: Message) => msg.author)
+	sentMessages : Message[]
 }

@@ -6,6 +6,7 @@ import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { DatabaseModule } from 'modules/db/db.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { RoomModule } from 'modules/room/room.module';
+import { MessageModule } from 'modules/message/message.module';
 
 
 @Module({
@@ -13,8 +14,8 @@ import { RoomModule } from 'modules/room/room.module';
     DatabaseModule,
     AuthModule,
     UserModule,
-    RoomModule
-  
+    RoomModule,
+    MessageModule
   ],
   controllers: [AppController],
   providers: [],

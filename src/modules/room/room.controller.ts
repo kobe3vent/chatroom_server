@@ -1,7 +1,7 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { Room } from './room.entity';
-import { Crud, CrudController } from '@nestjsx/crud';
+import { Crud, CrudController } from '@rewiko/crud';
 import { UserRole } from 'constants/roles';
 import { RestCrudGuard } from 'guards/roles.guard';
 import { JwtAuthGuard } from 'guards/jwt-auth.guard';
@@ -11,6 +11,14 @@ import { JwtAuthGuard } from 'guards/jwt-auth.guard';
 	model: {
 		type: Room,
 	},
+  query: {
+    join: {
+      members: {
+        eager : true,
+        
+      }
+    }
+  },
   routes: {
     exclude:['createManyBase', 'replaceOneBase']
   }

@@ -7,7 +7,7 @@ import { ClassSerializerInterceptor, ValidationPipe, UnprocessableEntityExceptio
 import { middleware as expressCtx } from 'express-ctx';
 import { TypeOrmExceptionFilter } from 'helpers/exceptionHandler';
 
-import { CrudConfigService } from '@nestjsx/crud';
+import { CrudConfigService } from '@rewiko/crud';
 // Important: load config before (!!!) you import AppModule
 CrudConfigService.load({
 	query: {

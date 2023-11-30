@@ -1,6 +1,6 @@
 import { Controller, UseGuards, } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Crud, CrudController } from '@nestjsx/crud';
+import { Crud, CrudController } from '@rewiko/crud';
 import { User } from './user.entity';
 import { RestCrudGuard } from 'guards/roles.guard';
 import { UserRole } from 'constants/roles';

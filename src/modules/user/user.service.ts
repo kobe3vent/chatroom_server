@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { TypeOrmCrudService } from '@rewiko/crud-typeorm';
 import { User } from './user.entity';
 import { USER_REPO } from 'constants/repositories';
 
