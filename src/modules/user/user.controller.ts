@@ -1,21 +1,32 @@
-import { Controller, UseGuards, } from '@nestjs/common';
+import { Controller, Get, UseGuards, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Crud, CrudController } from '@rewiko/crud';
 import { User } from './user.entity';
 import { RestCrudGuard } from 'guards/roles.guard';
 import { UserRole } from 'constants/roles';
+import { JwtAuthGuard } from 'guards/jwt-auth.guard';
+import { AuthUser } from 'decorators/auth-user.decorator';
 
 @Crud({
 	model: {
 		type: User,
 	},
+	query: {
+		join: {
+		  rooms: {
+			eager : true,
+		  },
+		 
+		}
+	  },
   routes: {
     exclude:['createManyBase', 'replaceOneBase']
   }
 })
 @UseGuards(
+	JwtAuthGuard,
 	new RestCrudGuard({
-		'Read-One': [UserRole.SUPERADMIN],
+		'Read-One': [UserRole.USER, UserRole.SUPERADMIN],
 		'Read-All': [UserRole.SUPERADMIN],
 		'Create-One': [UserRole.ALL],
 		'Create-Many': [],
@@ -27,8 +38,14 @@ import { UserRole } from 'constants/roles';
 @Controller('user')
 export class UserController implements CrudController<User> {
   constructor(public service: UserService) {}
+  
+	@Get('me')
+	async me(@AuthUser() user: User){
+		return this.service.findOne({where: {id: user.id},
+			relations: ['rooms']
+		})
 
-
+	}
 }
 
 //TODO: implement overide PATCH && DELETE route to only allow user to patch his object

@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller, ForbiddenException, Get, Param, UseGuards } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { Room } from './room.entity';
 import { Crud, CrudController, Override, ParsedBody } from '@rewiko/crud';
@@ -7,6 +7,7 @@ import { RestCrudGuard } from 'guards/roles.guard';
 import { JwtAuthGuard } from 'guards/jwt-auth.guard';
 import { AuthUser } from 'decorators/auth-user.decorator';
 import { User } from 'modules/user/user.entity';
+import { ArrayContains, In } from 'typeorm';
 
 
 @Crud({
@@ -19,8 +20,11 @@ import { User } from 'modules/user/user.entity';
         eager : true,
       },
       messages: {
-        eager: true
+        eager: true,
       },
+      admin: {
+        eager: true
+      }
      
     }
   },
@@ -48,4 +52,17 @@ export class RoomController implements CrudController<Room> {
 	createOne(@AuthUser() user: User, @ParsedBody() dto : Partial<Room>): Promise<Room> {
 		return this.service.create(user, dto);
 	}
+
+
+  @Get('details/:id')
+  async getRoomDetails(@Param('id') roomID: string , @AuthUser() user : User) {
+
+    const room = await this.service.findOne({where: {id: roomID}, relations: ['messages.author', 'members', 'admin']})
+    const userAmember = room.members.find(member => member.id === user.id);
+
+    if(!userAmember) throw new ForbiddenException();
+
+    return room;
+  }
+
 }

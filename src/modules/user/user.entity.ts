@@ -7,6 +7,7 @@ import { UserStatus } from 'constants/status';
 import { generateHash } from 'helpers/utils';
 import { Room } from 'modules/room/room.entity';
 import { Message } from 'modules/message/message.entity';
+import { Exclude } from 'class-transformer';
 
 const { UPDATE } = CrudValidationGroups;
 @Entity()
@@ -19,7 +20,7 @@ export class User extends AbstractEntity {
 	@Column({ type: 'varchar', unique: true })
 	username: string;
 
-	//TODO: dont expose
+	@Exclude()
 	@Column({ type: 'varchar'})
 	password: string;
 
