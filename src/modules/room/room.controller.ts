@@ -53,14 +53,17 @@ export class RoomController implements CrudController<Room> {
 		return this.service.create(user, dto);
 	}
 
-  //TODO validate param
+  //TODO: validate param
   @Get('details/:id')
   async getRoomDetails(@Param('id') roomID: string , @AuthUser() user : User) {
 
     const room = await this.service.findOne({where: {id: roomID}, relations: ['messages.author', 'members', 'admin']})
-    const userAmember = room.members.find(member => member.id === user.id);
+    const userIsAmember = room.members.find(member => member.id === user.id);
 
-    if(!userAmember) throw new ForbiddenException();
+    if(!userIsAmember) throw new ForbiddenException();
+
+    //sort messages in ASC order
+    room.messages.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 
     return room;
   }

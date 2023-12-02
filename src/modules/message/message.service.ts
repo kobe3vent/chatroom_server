@@ -11,7 +11,7 @@ export class MessageService extends TypeOrmCrudService<Message> {
     super(repo);
   }
 
-  
+  // TODO: validate message body
   async create(user: User, msg: Partial<Message>): Promise<Message> {
     
     const data: Partial<Message> = {
@@ -19,8 +19,6 @@ export class MessageService extends TypeOrmCrudService<Message> {
       author: user,
     
     }
-
-    console.log('data: create : ', data)
 
     return this.repo.save(data);
   }
