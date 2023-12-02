@@ -53,7 +53,7 @@ export class RoomController implements CrudController<Room> {
 		return this.service.create(user, dto);
 	}
 
-
+  //TODO validate param
   @Get('details/:id')
   async getRoomDetails(@Param('id') roomID: string , @AuthUser() user : User) {
 
