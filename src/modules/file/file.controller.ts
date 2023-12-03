@@ -27,13 +27,13 @@ import { UserRole } from "constants/roles";
 import { maxSizeFile } from "constants/misc";
 
 @UseGuards(JwtAuthGuard)
+@Roles(UserRole.USER)
+@UseGuards(RolesGuard)
 @Controller("file")
 export default class FileController {
   constructor(private readonly _fileService: FileService) {}
 
   @Post()
-  @Roles(UserRole.USER)
-  @UseGuards(RolesGuard)
   @UseInterceptors(FileInterceptor("file"))
   async create(
     @UploadedFile(
@@ -53,22 +53,12 @@ export default class FileController {
   }
 
   @Get(":id")
-  @Roles(UserRole.USER, UserRole.SUPERADMIN)
-  @UseGuards(RolesGuard)
-  async download(@Res() res: Response, @Param("id") id: string): Promise<void> {
-    try {
-      const { file, encodedFile } = await this._fileService.download(id);
-      res.type(file.contentType).send(encodedFile);
-    } catch (err) {
-      console.log(err);
-      throw new BadRequestException(err);
-    }
+  async download(@Param("id") id: string): Promise<any> {
+    return this._fileService.download(id);
   }
 
   @Delete(":id")
-  @Roles(UserRole.USER)
-  @UseGuards(RolesGuard)
-  delete(@Param("uuid") uuid: string): Promise<void> {
+  delete(@Param("id") uuid: string): Promise<void> {
     return this._fileService.delete(uuid);
   }
 }

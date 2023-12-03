@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Inject } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  Inject,
+  HttpException,
+} from "@nestjs/common";
 import { File } from "./entities/file.entity";
 //import { Base64Encode } from "base64-stream";
 import { Multer } from "multer";
@@ -23,10 +28,8 @@ export class FileService extends TypeOrmCrudService<File> {
   }
 
   async create(file: Multer.File): Promise<File> {
-    console.log("file: ", file);
-
     if (file) {
-      const path = `${APP_DIR}/storage/${
+      const path = `${APP_DIR}/../storage/${
         file.fieldname
       }_${new Date().getTime()}.${this.FILE_EXTENSIONS[file.mimetype]}`;
 
@@ -46,10 +49,7 @@ export class FileService extends TypeOrmCrudService<File> {
 
   async delete(id: string): Promise<void> {
     const file = await this.repo.findOne({ where: { id } });
-
-    if (!file) {
-      throw new NotFoundException();
-    }
+    if (!file) throw new NotFoundException();
 
     //TODO: Remove from dossier
 
@@ -57,35 +57,24 @@ export class FileService extends TypeOrmCrudService<File> {
     await this.repo.remove(file);
   }
 
-  async download(uuid: string): Promise<{ file: File; encodedFile: string }> {
-    const file = await this.repo.findOne({ where: { id: uuid } });
-    if (!file) {
-      throw new NotFoundException(uuid);
-    }
+  async download(
+    id: string
+  ): Promise<{ meta: Partial<File>; encodedFile: string }> {
+    const file = await this.repo.findOne({ where: { id } });
+    if (!file) throw new NotFoundException();
 
-    //Reaad file from folder
-    const data = "";
+    const { key, ...publicInfo } = file;
 
-    //const encoded64: Buffer = await this.streamToBase64(data);
+    try {
+      const fileBase64 = fs.readFileSync(file.key).toString("base64");
 
-    return {
-      file: file,
-      encodedFile: "", //encoded64.toString("utf-8"),
-    };
-  }
-
-  /*   private async streamToBase64(stream: Stream): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-      const cbConcat = (base64: Buffer): void => {
-        resolve(base64);
+      return {
+        meta: publicInfo,
+        encodedFile: fileBase64,
       };
-
-      stream
-        .pipe(new Base64Encode())
-        .pipe(concat(cbConcat))
-        .on("error", (error) => {
-          reject(error);
-        });
-    });
-  } */
+    } catch (e) {
+      console.log("trouble reading file: ", e);
+      throw new HttpException("File not found", 404);
+    }
+  }
 }

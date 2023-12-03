@@ -88,3 +88,6 @@ web_modules/
 
 #dist
 dist/*
+
+#local storage
+storage/
