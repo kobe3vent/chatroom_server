@@ -4,8 +4,7 @@ import {
   Inject,
   HttpException,
 } from "@nestjs/common";
-import { File } from "./entities/file.entity";
-//import { Base64Encode } from "base64-stream";
+import { File } from "./file.entity";
 import { Multer } from "multer";
 import { TypeOrmCrudService } from "@rewiko/crud-typeorm";
 import { FILE_REPO } from "constants/repositories";
@@ -13,7 +12,7 @@ import { dirname } from "path";
 import * as fs from "fs";
 
 const APP_DIR = dirname(require.main.filename);
-console.log("APP_DIR: ", APP_DIR);
+console.log("APP_DIR: ", __dirname);
 
 @Injectable()
 export class FileService extends TypeOrmCrudService<File> {

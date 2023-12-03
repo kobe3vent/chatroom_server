@@ -1,9 +1,16 @@
 import { IsNotEmpty } from "class-validator";
 import { AbstractEntity } from "common/entities/abstract.entity";
-import { File } from "modules/file/entities/file.entity";
+import { File } from "modules/file/file.entity";
 import { Room } from "modules/room/room.entity";
 import { User } from "modules/user/user.entity";
-import { Column, DataType, HasOne, Model, Table } from "sequelize-typescript";
+import {
+  Column,
+  DataType,
+  HasMany,
+  HasOne,
+  Model,
+  Table,
+} from "sequelize-typescript";
 
 export enum MessageType {
   TEXT = "text",
@@ -38,17 +45,15 @@ export class Message extends AbstractEntity {
   @HasOne(() => Model<Message>)
   parentMessage: Message;
 
-  @ManyToOne(() => User, (user: User) => user.sentMessages)
+  @HasOne(() => Model<User>)
   author: User;
 
-  @ManyToOne(() => Room, (room: Room) => room.messages)
+  @HasOne(() => Model<Room>)
   room: Room;
 
-  @ManyToMany(() => User)
-  @JoinTable()
+  @HasMany(() => Model<User>)
   seenBy: User[];
 
-  @OneToOne(() => File)
-  @JoinColumn()
+  @HasOne(() => Model<File>)
   attachment: File;
 }

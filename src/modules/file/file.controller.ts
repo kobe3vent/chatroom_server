@@ -4,12 +4,9 @@ import {
   Get,
   Post,
   Param,
-  Body,
   UploadedFile,
   Delete,
   UseGuards,
-  Res,
-  BadRequestException,
   ParseFilePipe,
   FileTypeValidator,
   MaxFileSizeValidator,
@@ -17,8 +14,7 @@ import {
 import { Multer } from "multer";
 import { FileService } from "./file.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Response } from "express";
-import { File } from "./entities/file.entity";
+import { File } from "./file.entity";
 import { RolesGuard } from "../../guards/roles.guard";
 import { Roles } from "../../decorators/roles.decorator";
 import { FileContentValidation } from "./validator/fileUploadValidation";

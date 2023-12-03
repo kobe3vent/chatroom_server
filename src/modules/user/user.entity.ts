@@ -18,8 +18,8 @@ import {
 
 @Table
 export class User extends AbstractEntity {
-  @Column
   @IsEmail()
+  @Column
   email: string;
 
   @Column
@@ -29,17 +29,18 @@ export class User extends AbstractEntity {
   @Column
   password: string;
 
-  @Column(DataType.ENUM(...Object.values(UserRole)))
   @Default(UserRole.USER)
+  @Column(DataType.ENUM(...Object.values(UserRole)))
   role: UserRole;
 
-  @Column(DataType.ENUM(...Object.values(UserStatus)))
   @Default(UserStatus.INACTIVE)
+  @Column(DataType.ENUM(...Object.values(UserStatus)))
   status: UserStatus;
 
   @BeforeCreate
-  async hashPassword(): Promise<void> {
-    this.password = generateHash(this.password);
+  static hashPassword(user: User) {
+    const temp = user.password;
+    user.password = generateHash(temp);
   }
 
   /**

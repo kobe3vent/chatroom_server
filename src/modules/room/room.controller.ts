@@ -13,7 +13,6 @@ import { RestCrudGuard } from "guards/roles.guard";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
 import { AuthUser } from "decorators/auth-user.decorator";
 import { User } from "modules/user/user.entity";
-import { ArrayContains, In } from "typeorm";
 
 @Crud({
   model: {

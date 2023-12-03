@@ -12,7 +12,10 @@ export const databaseProviders = [
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DB,
         models: [__dirname + "/../**/*.entity{.ts,.js}"],
-
+        sync: {
+          alter: true,
+          hooks: true,
+        },
         //logging : true
       });
       await dataSource.sync();

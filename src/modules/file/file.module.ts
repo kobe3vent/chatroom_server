@@ -1,11 +1,9 @@
 import { Module } from "@nestjs/common";
 import { FileService } from "modules/file/file.service";
 import FileController from "./file.controller";
-import { FILE_REPO, DATA_SOURCE } from "constants/repositories";
+import { FILE_REPO } from "constants/repositories";
 import { DatabaseModule } from "modules/db/db.module";
-import { Message } from "modules/message/message.entity";
-import { DataSource } from "typeorm";
-import { File } from "./entities/file.entity";
+import { File } from "./file.entity";
 
 @Module({
   imports: [DatabaseModule],
@@ -13,8 +11,7 @@ import { File } from "./entities/file.entity";
   providers: [
     {
       provide: FILE_REPO,
-      useFactory: (dataSource: DataSource) => dataSource.getRepository(File),
-      inject: [DATA_SOURCE],
+      useValue: File,
     },
     FileService,
   ],
