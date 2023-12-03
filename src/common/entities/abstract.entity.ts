@@ -1,18 +1,29 @@
-import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Model } from "sequelize";
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  Default,
+  DeletedAt,
+  IsUUID,
+  PrimaryKey,
+  UpdatedAt,
+} from "sequelize-typescript";
 
-export abstract class AbstractEntity {
-	@PrimaryGeneratedColumn('uuid')
-	id: string;
+export abstract class AbstractEntity extends Model {
+  @IsUUID(4)
+  @PrimaryKey
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id: string;
 
-	// @Exclude()
-	@CreateDateColumn({
-		type: 'timestamp',
-	})
-	createdAt: Date;
+  // @Exclude()
+  @CreatedAt
+  createdAt: Date;
 
-	// @Exclude()
-	@UpdateDateColumn({
-		type: 'timestamp',
-	})
-	updatedAt: Date;
+  @UpdatedAt
+  updatedAt: Date;
+
+  @DeletedAt
+  deletedAt: Date;
 }

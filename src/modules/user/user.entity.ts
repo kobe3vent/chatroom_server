@@ -1,48 +1,54 @@
-import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany} from 'typeorm';
-import { AbstractEntity } from 'common/entities/abstract.entity';
-import { IsEmail, IsOptional } from 'class-validator';
-import { CrudValidationGroups } from '@rewiko/crud';
-import { UserRole } from 'constants/roles';
-import { UserStatus } from 'constants/status';
-import { generateHash } from 'helpers/utils';
-import { Room } from 'modules/room/room.entity';
-import { Message } from 'modules/message/message.entity';
-import { Exclude } from 'class-transformer';
+import { AbstractEntity } from "common/entities/abstract.entity";
+import { IsEmail } from "class-validator";
+import { UserRole } from "constants/roles";
+import { UserStatus } from "constants/status";
+import { generateHash } from "helpers/utils";
+import { Room } from "modules/room/room.entity";
+import { Message } from "modules/message/message.entity";
+import { Exclude } from "class-transformer";
+import {
+  BeforeCreate,
+  Column,
+  DataType,
+  Default,
+  HasMany,
+  Model,
+  Table,
+} from "sequelize-typescript";
 
-const { UPDATE } = CrudValidationGroups;
-@Entity()
+@Table
 export class User extends AbstractEntity {
-	@Column({ unique: true, type: 'varchar'})
-	@IsEmail()
-	@IsOptional({ groups: [UPDATE] })
-	email: string;
+  @Column
+  @IsEmail()
+  email: string;
 
-	@Column({ type: 'varchar', unique: true })
-	username: string;
+  @Column
+  username: string;
 
-	@Exclude()
-	@Column({ type: 'varchar'})
-	password: string;
+  @Exclude()
+  @Column
+  password: string;
 
-	@Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-	role: UserRole;
+  @Column(DataType.ENUM(...Object.values(UserRole)))
+  @Default(UserRole.USER)
+  role: UserRole;
 
-	@Column({ type: 'enum', enum: UserStatus, default: UserStatus.INACTIVE })
-	status: UserStatus;
+  @Column(DataType.ENUM(...Object.values(UserStatus)))
+  @Default(UserStatus.INACTIVE)
+  status: UserStatus;
 
-    @BeforeInsert()
-    async hashPassword(): Promise<void> {
-        this.password = generateHash(this.password);
-    }
-	
+  @BeforeCreate
+  async hashPassword(): Promise<void> {
+    this.password = generateHash(this.password);
+  }
 
-	/**
-	 * Relations
-	*/
+  /**
+   * Relations
+   */
 
-	@ManyToMany(() => Room, (room: Room) => room.members)
-	rooms: Room[];
-	
-	@OneToMany(()=> Message, (msg: Message) => msg.author)
-	sentMessages : Message[]
+  @HasMany(() => Model<Room>)
+  rooms: Room[];
+
+  @HasMany(() => Model<Message>)
+  sentMessages: Message[];
 }

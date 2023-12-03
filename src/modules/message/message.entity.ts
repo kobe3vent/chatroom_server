@@ -3,15 +3,7 @@ import { AbstractEntity } from "common/entities/abstract.entity";
 import { File } from "modules/file/entities/file.entity";
 import { Room } from "modules/room/room.entity";
 import { User } from "modules/user/user.entity";
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToOne,
-} from "typeorm";
+import { Column, DataType, HasOne, Model, Table } from "sequelize-typescript";
 
 export enum MessageType {
   TEXT = "text",
@@ -21,33 +13,29 @@ export enum MessageType {
   File = "file",
 }
 
-@Entity()
+@Table
 export class Message extends AbstractEntity {
-  @Column({ type: "varchar", nullable: true })
+  @Column
   subject: string;
 
   @IsNotEmpty()
-  @Column({ type: "varchar" })
+  @Column
   body: string;
 
-  @Column({ type: "enum", enum: MessageType, default: MessageType.TEXT })
+  @Column
   type: string;
 
-  @Column({
-    type: "timestamp",
-    default: null,
-  })
+  @Column(DataType.DATE)
   expirationDate: Date;
 
-  @Column({ type: "boolean", default: false })
+  @Column
   deletedByAuthor: boolean;
 
   /**
    * Relations
    */
 
-  @OneToOne(() => Message)
-  @JoinColumn()
+  @HasOne(() => Model<Message>)
   parentMessage: Message;
 
   @ManyToOne(() => User, (user: User) => user.sentMessages)

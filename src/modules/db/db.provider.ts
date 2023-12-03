@@ -1,25 +1,22 @@
-
-import { DataSource } from 'typeorm';
+import { Sequelize } from "sequelize-typescript";
 
 export const databaseProviders = [
   {
-    provide: 'DATA_SOURCE',
+    provide: "SEQUELIZE",
     useFactory: async () => {
-      const dataSource = new DataSource({
-        type: 'mysql',
+      const dataSource = new Sequelize({
+        dialect: "mysql",
         host: process.env.MYSQL_HOST,
         port: 3306,
         username: process.env.MYSQL_USERNAME,
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DB,
-        entities: [
-            __dirname + '/../**/*.entity{.ts,.js}',
-        ],
-        synchronize: true,
+        models: [__dirname + "/../**/*.entity{.ts,.js}"],
+
         //logging : true
       });
-
-      return dataSource.initialize();
+      await dataSource.sync();
+      return dataSource;
     },
   },
 ];
