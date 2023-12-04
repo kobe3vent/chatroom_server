@@ -37,12 +37,6 @@ import { AuthUser } from "decorators/auth-user.decorator";
 @Controller("user")
 export class UserController implements CrudController<User> {
   constructor(public service: UserService) {}
-  
-	@Get('me')
-	async me(@AuthUser() user: User){
-		return this.service.findOne({where: {id: user.id},
-			relations: ['rooms']
-		})
 
   @UseGuards(JwtAuthGuard)
   @Get("me")
