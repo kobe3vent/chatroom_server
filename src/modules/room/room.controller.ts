@@ -2,6 +2,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   UseGuards,
 } from "@nestjs/common";
@@ -13,7 +14,6 @@ import { RestCrudGuard } from "guards/roles.guard";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
 import { AuthUser } from "decorators/auth-user.decorator";
 import { User } from "modules/user/user.entity";
-import { ArrayContains, In } from "typeorm";
 
 @Crud({
   model: {
@@ -39,13 +39,13 @@ import { ArrayContains, In } from "typeorm";
 @UseGuards(
   JwtAuthGuard,
   new RestCrudGuard({
-    "Read-One": [UserRole.USER, UserRole.SUPERADMIN],
-    "Read-All": [UserRole.SUPERADMIN],
+    "Read-One": [],
+    "Read-All": [],
     "Create-One": [UserRole.USER],
     "Create-Many": [],
-    "Update-One": [UserRole.USER, UserRole.SUPERADMIN],
+    "Update-One": [],
     "Replace-One": [],
-    "Delete-One": [UserRole.USER, UserRole.SUPERADMIN],
+    "Delete-One": [],
   })
 )
 @Controller("room")
@@ -60,16 +60,16 @@ export class RoomController implements CrudController<Room> {
     return this.service.create(user, dto);
   }
 
-  //TODO: validate param
   @Get("details/:id")
   async getRoomDetails(@Param("id") roomID: string, @AuthUser() user: User) {
     const room = await this.service.findOne({
       where: { id: roomID },
       relations: ["messages.author", "members", "admin", "messages.attachment"],
     });
+    if (!room) throw new NotFoundException(`room: ${roomID} couldnt be found`);
     const userIsAmember = room.members.find((member) => member.id === user.id);
 
-    if (!userIsAmember) throw new ForbiddenException();
+    if (!userIsAmember) throw new ForbiddenException("You dont belong here");
 
     //sort messages in ASC order
     room.messages.sort(

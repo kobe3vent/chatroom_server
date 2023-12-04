@@ -4,12 +4,9 @@ import {
   Get,
   Post,
   Param,
-  Body,
   UploadedFile,
   Delete,
   UseGuards,
-  Res,
-  BadRequestException,
   ParseFilePipe,
   FileTypeValidator,
   MaxFileSizeValidator,
@@ -17,7 +14,6 @@ import {
 import { Multer } from "multer";
 import { FileService } from "./file.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Response } from "express";
 import { File } from "./entities/file.entity";
 import { RolesGuard } from "../../guards/roles.guard";
 import { Roles } from "../../decorators/roles.decorator";
@@ -25,6 +21,8 @@ import { FileContentValidation } from "./validator/fileUploadValidation";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
 import { UserRole } from "constants/roles";
 import { maxSizeFile } from "constants/misc";
+import { AuthUser } from "decorators/auth-user.decorator";
+import { User } from "modules/user/user.entity";
 
 @UseGuards(JwtAuthGuard)
 @Roles(UserRole.USER)
@@ -53,8 +51,11 @@ export default class FileController {
   }
 
   @Get(":id")
-  async download(@Param("id") id: string): Promise<any> {
-    return this._fileService.download(id);
+  async download(
+    @Param("id") id: string,
+    @AuthUser() user: User
+  ): Promise<{ meta: Partial<File>; encodedFile: string }> {
+    return this._fileService.download(id, user);
   }
 
   @Delete(":id")
