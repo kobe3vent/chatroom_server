@@ -4,12 +4,19 @@ import { File } from "modules/file/file.entity";
 import { Room } from "modules/room/room.entity";
 import { User } from "modules/user/user.entity";
 import {
+  BelongsTo,
   Column,
+  CreatedAt,
   DataType,
+  Default,
+  DeletedAt,
   HasMany,
   HasOne,
+  IsUUID,
   Model,
+  PrimaryKey,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
 
 export enum MessageType {
@@ -21,7 +28,13 @@ export enum MessageType {
 }
 
 @Table
-export class Message extends AbstractEntity {
+export class Message extends Model<Message> {
+  @IsUUID(4)
+  @PrimaryKey
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id: string;
+
   @Column
   subject: string;
 
@@ -42,18 +55,17 @@ export class Message extends AbstractEntity {
    * Relations
    */
 
-  @HasOne(() => Model<Message>)
+  @BelongsTo(() => Message, "parentID")
   parentMessage: Message;
-
-  @HasOne(() => Model<User>)
+  @HasOne(() => User, "messageAuthor")
   author: User;
 
-  @HasOne(() => Model<Room>)
+  @HasOne(() => Room, "messageRoom")
   room: Room;
 
-  @HasMany(() => Model<User>)
+  @HasMany(() => User, "messageSeenBy")
   seenBy: User[];
 
-  @HasOne(() => Model<File>)
+  @HasOne(() => File, "messageAttachment")
   attachment: File;
 }

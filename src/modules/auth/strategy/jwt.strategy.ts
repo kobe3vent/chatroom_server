@@ -7,7 +7,7 @@ import { User } from "modules/user/user.entity";
 import { UserService } from "modules/user/user.service";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
   constructor(
     private readonly authService: AuthService,
     private userservice: UserService
@@ -26,9 +26,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns User
    */
   async validate(payload: any): Promise<User | HttpException> {
-    const user = await this.userservice.findOne({ where: { email: payload.email} });
+    const user = await this.userservice.findOneByEmail(payload.email);
 
     return user || new HttpException("Invalid user", HttpStatus.UNAUTHORIZED);
-
   }
 }

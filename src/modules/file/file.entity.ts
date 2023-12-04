@@ -1,10 +1,28 @@
 import { AbstractEntity } from "common/entities/abstract.entity";
 import { Message } from "modules/message/message.entity";
 import { Exclude } from "class-transformer";
-import { Column, HasOne, Model, Table } from "sequelize-typescript";
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  Default,
+  DeletedAt,
+  HasOne,
+  IsUUID,
+  Model,
+  PrimaryKey,
+  Table,
+  UpdatedAt,
+} from "sequelize-typescript";
 
 @Table
-export class File extends AbstractEntity {
+export class File extends Model<File> {
+  @IsUUID(4)
+  @PrimaryKey
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id: string;
+
   @Exclude()
   @Column
   key: string;
@@ -16,6 +34,6 @@ export class File extends AbstractEntity {
   contentType!: string;
 
   //relations
-  @HasOne(() => Model<Message>)
+  //@HasOne(() => Message, "fileMessage")
   message: Message;
 }

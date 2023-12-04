@@ -19,16 +19,16 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "node",
     "paths": {
-			"constants/*": ["constants/*"],
-			"common/*": ["common/*"],
-			"decorators/*": ["decorators/*"],
-			"guards/*": ["guards/*"],
-			"interfaces/*": ["interfaces/*"],
-			"middlewares/*": ["middlewares/*"],
-			"migrations/*": ["migrations/*"],
-			"modules/*": ["modules/*"],
-			"providers/*": ["providers/*"],
-		}
-  }, 
-  "include": ["src/**/*"],
+      "constants/*": ["constants/*"],
+      "common/*": ["common/*"],
+      "decorators/*": ["decorators/*"],
+      "guards/*": ["guards/*"],
+      "interfaces/*": ["interfaces/*"],
+      "middlewares/*": ["middlewares/*"],
+      "migrations/*": ["migrations/*"],
+      "modules/*": ["modules/*"],
+      "providers/*": ["providers/*"]
+    }
+  },
+  "include": ["src/**/*"]
 }

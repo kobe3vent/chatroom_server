@@ -1,32 +1,37 @@
-import { AbstractEntity } from "common/entities/abstract.entity";
 import { IsEmail } from "class-validator";
 import { UserRole } from "constants/roles";
 import { UserStatus } from "constants/status";
 import { generateHash } from "helpers/utils";
-import { Room } from "modules/room/room.entity";
-import { Message } from "modules/message/message.entity";
 import { Exclude } from "class-transformer";
 import {
   BeforeCreate,
   Column,
   DataType,
   Default,
-  HasMany,
   Model,
   Table,
 } from "sequelize-typescript";
 
-@Table
-export class User extends AbstractEntity {
+@Table({
+  timestamps: true,
+  paranoid: true,
+})
+export class User extends Model<User> {
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+  })
+  id: string;
+
   @IsEmail()
-  @Column
+  @Column({ allowNull: false, unique: true })
   email: string;
 
-  @Column
+  @Column({ allowNull: false })
   username: string;
 
-  @Exclude()
-  @Column
+  @Column({ allowNull: false })
   password: string;
 
   @Default(UserRole.USER)
@@ -39,17 +44,20 @@ export class User extends AbstractEntity {
 
   @BeforeCreate
   static hashPassword(user: User) {
+    console.log("in hash ", user);
     const temp = user.password;
     user.password = generateHash(temp);
+    return user;
   }
 
   /**
    * Relations
    */
 
-  @HasMany(() => Model<Room>)
-  rooms: Room[];
+  //TODO:
+  //@HasMany(() => Room, "userRooms")
+  //rooms: Room[];
 
-  @HasMany(() => Model<Message>)
-  sentMessages: Message[];
+  //@HasMany(() => Message, "userSentMessages")
+  //sentMessages: Message[];
 }

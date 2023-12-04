@@ -1,10 +1,28 @@
 import { AbstractEntity } from "common/entities/abstract.entity";
 import { Message } from "modules/message/message.entity";
 import { User } from "modules/user/user.entity";
-import { Column, HasMany, Model, Table } from "sequelize-typescript";
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  Default,
+  DeletedAt,
+  HasMany,
+  IsUUID,
+  Model,
+  PrimaryKey,
+  Table,
+  UpdatedAt,
+} from "sequelize-typescript";
 
 @Table
-export class Room extends AbstractEntity {
+export class Room extends Model<Room> {
+  @IsUUID(4)
+  @PrimaryKey
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  id: string;
+
   @Column
   name: string;
 
@@ -14,12 +32,12 @@ export class Room extends AbstractEntity {
   /**
    * Relations
    */
-  @HasMany(() => Model<User>)
+  @HasMany(() => User, "roomMembers")
   members: User[];
 
-  @HasMany(() => Model<Message>)
+  //@HasMany(() => Message, "roomMessages")
   messages: Message[];
 
-  @HasMany(() => Model<User>)
+  @HasMany(() => User, "roomAdmin")
   admin: User[];
 }
