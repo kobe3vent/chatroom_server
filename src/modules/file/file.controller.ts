@@ -46,7 +46,7 @@ export default class FileController {
       })
     )
     file: Multer.File
-  ): Promise<File> {
+  ): Promise<Partial<File>> {
     return this._fileService.create(file);
   }
 

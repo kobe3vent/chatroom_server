@@ -11,7 +11,7 @@ export class MessageService extends TypeOrmCrudService<Message> {
   }
 
   async create(user: User, msg: Partial<Message>): Promise<Message> {
-    if (!msg.body || !msg.room)
+    if ((!msg.body && !msg.attachment) || !msg.room)
       throw new BadRequestException("message body || room cant be empty");
 
     const data: Partial<Message> = {

@@ -16,6 +16,6 @@ export class File extends AbstractEntity {
   contentType!: string;
 
   //relations
-  @OneToOne(() => Message)
+  @OneToOne(() => Message, (message) => message.attachment)
   message: Message;
 }

@@ -28,7 +28,7 @@ export class FileService extends TypeOrmCrudService<File> {
     super(repo);
   }
 
-  async create(file: Multer.File): Promise<File> {
+  async create(file: Multer.File): Promise<Partial<File>> {
     if (file) {
       const path = `${APP_DIR}/../storage/${
         file.fieldname
@@ -40,11 +40,14 @@ export class FileService extends TypeOrmCrudService<File> {
         console.log("trouble writing to file: ", e);
       }
 
-      return this.repo.save({
+      const savedFile = await this.repo.save({
         key: path,
         name: file.originalname,
         contentType: file.mimetype,
       });
+
+      const { key, ...clone } = savedFile;
+      return clone;
     }
   }
 
