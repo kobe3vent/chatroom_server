@@ -7,11 +7,12 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
+import { WsGuard } from "guards/socket.guard";
 import { Message } from "modules/message/message.entity";
 import { Room } from "modules/room/room.entity";
 import { Server, Socket } from "socket.io";
 
-//TODO: implement token auth for sokets
+@UseGuards(WsGuard)
 @WebSocketGateway(81, {
   transports: ["polling"],
   cors: {
@@ -34,7 +35,7 @@ export class SocketGateway {
   }
 
   //TODO: alert on new Rooms created
-  @SubscribeMessage("newRoom")
+  @SubscribeMessage("newRoomCreated")
   newChatRoom(
     @MessageBody() room: Room,
     @ConnectedSocket() client: Socket
