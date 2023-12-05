@@ -14,7 +14,6 @@ export class WsGuard implements CanActivate {
       if (decoded) return true;
       return false;
     } catch (ex) {
-      console.log("error socket: ", ex);
       return false;
     }
   }
