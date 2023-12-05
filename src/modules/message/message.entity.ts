@@ -60,7 +60,7 @@ export class Message extends AbstractEntity {
   @JoinTable()
   seenBy: User[];
 
-  @OneToOne(() => File)
+  @OneToOne(() => File, (file) => file.message)
   @JoinColumn()
   attachment: File;
 }

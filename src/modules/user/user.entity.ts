@@ -19,7 +19,7 @@ export class User extends AbstractEntity {
   @Column({ type: "varchar", unique: true })
   username: string;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", select: false })
   password: string;
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
