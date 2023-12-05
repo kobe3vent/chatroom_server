@@ -6,7 +6,7 @@ import {
   ConnectedSocket,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { JwtAuthGuard } from "guards/jwt-auth.guard";
+import { SEND_MESSAGE, NOTIFY_NEW_ROOM } from "constants/misc";
 import { WsGuard } from "guards/socket.guard";
 import { Message } from "modules/message/message.entity";
 import { Room } from "modules/room/room.entity";
@@ -25,7 +25,7 @@ export class SocketGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage("sendMessageToRoom")
+  @SubscribeMessage(SEND_MESSAGE)
   sendMessageToRoom(
     @MessageBody() msg: Message,
     @ConnectedSocket() client: Socket
@@ -34,12 +34,13 @@ export class SocketGateway {
     this.server.emit(`${msg.room.id}`, msg);
   }
 
-  //TODO: alert on new Rooms created
-  @SubscribeMessage("newRoomCreated")
+  @SubscribeMessage(NOTIFY_NEW_ROOM)
   newChatRoom(
     @MessageBody() room: Room,
     @ConnectedSocket() client: Socket
   ): void {
-    this.server.emit("newRoom", room);
+    console.log("room: : ", room);
+
+    room.members.every((member) => this.server.emit(member.id, room));
   }
 }

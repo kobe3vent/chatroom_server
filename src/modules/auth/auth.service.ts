@@ -21,7 +21,6 @@ export class AuthService {
       select: ["username", "password"],
       where: { email },
     });
-    console.log("userDetails: ", userDetails);
     if (!userDetails) {
       throw new HttpException("Invalid credentials", 401);
     }
