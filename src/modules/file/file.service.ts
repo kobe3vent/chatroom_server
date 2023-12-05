@@ -14,7 +14,6 @@ import * as fs from "fs";
 import { User } from "modules/user/user.entity";
 
 const APP_DIR = dirname(require.main.filename);
-console.log("APP_DIR: ", APP_DIR);
 
 @Injectable()
 export class FileService extends TypeOrmCrudService<File> {

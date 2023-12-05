@@ -18,7 +18,7 @@ export class AuthService {
     password: string;
   }): Promise<Record<string, any>> {
     const userDetails = await this.userService.findOne({
-      select: ["username", "password"],
+      select: ["username", "password", "email", "id"],
       where: { email },
     });
     if (!userDetails) {
@@ -27,6 +27,7 @@ export class AuthService {
 
     // Check if the given password match with saved password
     const isValid = await validateHash(password, userDetails.password);
+    delete userDetails.password;
     return isValid
       ? {
           token: this.jwtService.sign(
