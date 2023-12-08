@@ -1,23 +1,27 @@
-import { IsDate, IsEnum, IsNotEmpty, IsString, isString } from "class-validator";
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  isString,
+} from "class-validator";
 import { MessageType } from "../message.entity";
 
 export class CreateMessageDto {
-    
-    @IsString()
-    subject: string;
+  @IsString()
+  subject: string;
 
-    @IsNotEmpty()
-    body: string;
+  @IsNotEmpty()
+  body: string;
 
-    @IsNotEmpty()
-    room: string;
+  @IsNotEmpty()
+  room: string;
 
-    @IsEnum(MessageType)
-    type: string;
+  @IsEnum(MessageType)
+  type: string;
 
-    @IsDate()
-    expirationDate: Date;
+  @IsDate()
+  expirationDate: Date;
 
-    parentMessage
-
+  parentMessage;
 }

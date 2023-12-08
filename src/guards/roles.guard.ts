@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { getAction } from "@nestjsx/crud";
+import { getAction } from "@rewiko/crud";
 import { UserRole } from "constants/roles";
 import { User } from "modules/user/user.entity";
 

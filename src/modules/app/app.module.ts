@@ -9,6 +9,8 @@ import { RoomModule } from "modules/room/room.module";
 import { MessageModule } from "modules/message/message.module";
 import { SocketModule } from "modules/socket/socket.module";
 import { FileModule } from "modules/file/file.module";
+import { AppService } from "./app.service";
+import { SeederModule } from "seeding/seeder.module";
 
 @Module({
   imports: [
@@ -19,9 +21,10 @@ import { FileModule } from "modules/file/file.module";
     MessageModule,
     SocketModule,
     FileModule,
+    SeederModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
