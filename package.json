@@ -30,8 +30,6 @@
     "@nestjs/platform-socket.io": "^10.2.10",
     "@nestjs/typeorm": "^9.0.0",
     "@nestjs/websockets": "^10.2.10",
-    "@nestjsx/crud": "^5.0.0-alpha.3",
-    "@nestjsx/crud-typeorm": "^5.0.0-alpha.3",
     "@rewiko/crud": "^5.1.12",
     "@rewiko/crud-request": "^5.1.12",
     "@rewiko/crud-typeorm": "^5.1.12",
