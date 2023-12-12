@@ -90,4 +90,4 @@ web_modules/
 dist/*
 
 #local storage
-#storage/
+storage/
