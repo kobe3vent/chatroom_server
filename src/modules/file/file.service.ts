@@ -9,11 +9,8 @@ import { File } from "./entities/file.entity";
 import { Multer } from "multer";
 import { TypeOrmCrudService } from "@rewiko/crud-typeorm";
 import { FILE_REPO } from "constants/repositories";
-import { dirname } from "path";
-import * as fs from "fs";
 import { User } from "modules/user/user.entity";
-
-const APP_DIR = dirname(require.main.filename);
+import * as Minio from "minio";
 
 @Injectable()
 export class FileService extends TypeOrmCrudService<File> {
@@ -28,25 +25,41 @@ export class FileService extends TypeOrmCrudService<File> {
   }
 
   async create(file: Multer.File): Promise<Partial<File>> {
+    const minioClient = new Minio.Client({
+      endPoint: process.env.MINIO_HOST,
+      port: parseInt(process.env.MINIO_PORT),
+      useSSL: false,
+      accessKey: process.env.MINIO_ACCESSKEY,
+      secretKey: process.env.MINIO_SECRETKEY,
+    });
+
     if (file) {
-      const path = `${APP_DIR}/../storage/${
-        file.fieldname
-      }_${new Date().getTime()}.${this.FILE_EXTENSIONS[file.mimetype]}`;
+      //TODO replace null too with underscore . use regex
+      const fileName = `${file.originalname.replace(
+        " ",
+        "_"
+      )}_${new Date().getTime()}.${this.FILE_EXTENSIONS[file.mimetype]}`;
 
-      try {
-        fs.writeFileSync(path, file.buffer);
-      } catch (e) {
-        console.log("trouble writing to file: ", e);
-      }
-
+      minioClient.putObject(
+        process.env.MINIO_BUCKET,
+        fileName,
+        file.buffer,
+        file.size,
+        function (err, objInfo) {
+          if (err) {
+            console.log("trouble writing to file: ", err);
+            throw new HttpException("Error saving file", 500);
+          }
+          console.log("Success", objInfo);
+        }
+      );
       const savedFile = await this.repo.save({
-        key: path,
-        name: file.originalname,
+        key: fileName, // objInfo.etag,
+        name: fileName,
         contentType: file.mimetype,
       });
 
-      const { key, ...clone } = savedFile;
-      return clone;
+      return savedFile;
     }
   }
 
@@ -64,23 +77,44 @@ export class FileService extends TypeOrmCrudService<File> {
     id: string,
     user: User
   ): Promise<{ meta: Partial<File>; encodedFile: string }> {
+    const minioClient = new Minio.Client({
+      endPoint: process.env.MINIO_HOST,
+      port: parseInt(process.env.MINIO_PORT),
+      useSSL: false,
+      accessKey: process.env.MINIO_ACCESSKEY,
+      secretKey: process.env.MINIO_SECRETKEY,
+    });
+
     const file = await this.repo.findOne({
       where: { id },
       relations: ["message.author"],
     });
     if (!file) throw new NotFoundException();
 
-    if (file.message.author.id !== user.id)
-      throw new ForbiddenException("You did not post this file");
+    // TO DO: uncomment
+    //if (file.message.author.id !== user.id)
+    //  throw new ForbiddenException("You did not post this file");
 
     const { key, ...publicInfo } = file;
 
     try {
-      const fileBase64 = fs.readFileSync(file.key).toString("base64");
+      //const fileBase64 = fs.readFileSync(file.key).toString("base64");
+      minioClient.getObject(
+        process.env.MINIO_BUCKET,
+        file.name,
+        function (err, dataStream) {
+          if (err) {
+            return console.log(err);
+          }
+          dataStream.on("data", function (chunk) {
+            console.log(" chunck : ", chunk);
+          });
+        }
+      );
 
       return {
         meta: publicInfo,
-        encodedFile: fileBase64,
+        encodedFile: "fileBase64",
       };
     } catch (e) {
       console.log("trouble reading file: ", e);
