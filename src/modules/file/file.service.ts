@@ -3,17 +3,15 @@ import {
   NotFoundException,
   Inject,
   HttpException,
+  HttpStatus,
   ForbiddenException,
 } from "@nestjs/common";
 import { File } from "./entities/file.entity";
 import { Multer } from "multer";
 import { TypeOrmCrudService } from "@rewiko/crud-typeorm";
 import { FILE_REPO } from "constants/repositories";
-import { dirname } from "path";
-import * as fs from "fs";
 import { User } from "modules/user/user.entity";
-
-const APP_DIR = dirname(require.main.filename);
+import { getFromMinio, removeFromMinio, uploadToMinio } from "./minio.service";
 
 @Injectable()
 export class FileService extends TypeOrmCrudService<File> {
@@ -28,36 +26,33 @@ export class FileService extends TypeOrmCrudService<File> {
   }
 
   async create(file: Multer.File): Promise<Partial<File>> {
-    if (file) {
-      const path = `${APP_DIR}/../storage/${
-        file.fieldname
-      }_${new Date().getTime()}.${this.FILE_EXTENSIONS[file.mimetype]}`;
+    if (!file) return;
 
-      try {
-        fs.writeFileSync(path, file.buffer);
-      } catch (e) {
-        console.log("trouble writing to file: ", e);
-      }
-
+    try {
+      const uploadedFile = await uploadToMinio(file);
       const savedFile = await this.repo.save({
-        key: path,
-        name: file.originalname,
+        key: uploadedFile.etag,
+        name: uploadedFile.name,
         contentType: file.mimetype,
       });
 
-      const { key, ...clone } = savedFile;
-      return clone;
+      return savedFile;
+    } catch (err) {
+      console.error("trouble saving to file: ", err);
+      throw new HttpException(
+        "Trouble saving file",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<File> {
     const file = await this.repo.findOne({ where: { id } });
     if (!file) throw new NotFoundException();
 
-    //TODO: Remove from dossier
+    await removeFromMinio(file);
 
-    // Remove from database
-    await this.repo.remove(file);
+    return this.repo.remove(file);
   }
 
   async download(
@@ -73,18 +68,19 @@ export class FileService extends TypeOrmCrudService<File> {
     if (file.message.author.id !== user.id)
       throw new ForbiddenException("You did not post this file");
 
-    const { key, ...publicInfo } = file;
-
     try {
-      const fileBase64 = fs.readFileSync(file.key).toString("base64");
+      const url = await getFromMinio(file);
 
       return {
-        meta: publicInfo,
-        encodedFile: fileBase64,
+        meta: file,
+        encodedFile: url,
       };
     } catch (e) {
-      console.log("trouble reading file: ", e);
-      throw new HttpException("File not found", 404);
+      console.error("trouble reading file: ", e);
+      throw new HttpException(
+        "trouble reading file",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }

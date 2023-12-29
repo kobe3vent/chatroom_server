@@ -59,7 +59,7 @@ export default class FileController {
   }
 
   @Delete(":id")
-  delete(@Param("id") uuid: string): Promise<void> {
+  delete(@Param("id") uuid: string): Promise<File> {
     return this._fileService.delete(uuid);
   }
 }
