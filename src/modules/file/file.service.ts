@@ -4,6 +4,7 @@ import {
   Inject,
   HttpException,
   HttpStatus,
+  ForbiddenException,
 } from "@nestjs/common";
 import { File } from "./entities/file.entity";
 import { Multer } from "multer";
@@ -64,16 +65,15 @@ export class FileService extends TypeOrmCrudService<File> {
     });
     if (!file) throw new NotFoundException();
 
-    // TO DO: uncomment
-    //if (file.message.author.id !== user.id)
-    //  throw new ForbiddenException("You did not post this file");
+    if (file.message.author.id !== user.id)
+      throw new ForbiddenException("You did not post this file");
 
     try {
-      const buffer = await getFromMinio(file);
+      const url = await getFromMinio(file);
 
       return {
         meta: file,
-        encodedFile: buffer,
+        encodedFile: url,
       };
     } catch (e) {
       console.error("trouble reading file: ", e);

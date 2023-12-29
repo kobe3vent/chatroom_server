@@ -56,21 +56,14 @@ export const getFromMinio = async (file: File): Promise<string> => {
 
   return new Promise((resolve, reject) => {
     let fileContent = "";
-    minioClient.getObject(
+    minioClient.presignedGetObject(
       process.env.MINIO_BUCKET,
       file.name,
-      function (err, dataStream) {
+      (err, genereatedUrl) => {
         if (err) {
-          return console.log(err);
-        }
-        dataStream.on("data", (chunk) => (fileContent += chunk));
-
-        dataStream.on("end", () => resolve(fileContent));
-
-        dataStream.on("error", (err) => {
-          console.error("streaming minio error: ", err);
           return reject(err);
-        });
+        }
+        return resolve(genereatedUrl);
       }
     );
   });
