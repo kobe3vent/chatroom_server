@@ -1,10 +1,10 @@
 {
   "name": "chatroom_server",
   "version": "0.1.0",
-  "description": "backend for a chatroom service",
-  "author": "",
+  "description": "Server for encrypted chat service",
+  "author": "cecil (https://github.com/kobe3vent)",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
