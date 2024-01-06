@@ -1,22 +1,14 @@
 import { Module } from "@nestjs/common";
 import { MessageService } from "./message.service";
 import { MessageController } from "./message.controller";
-import { DATA_SOURCE, MESSAGE_REPO } from "constants/repositories";
-import { DatabaseModule } from "modules/db/db.module";
-import { DataSource } from "typeorm";
 import { Message } from "./message.entity";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { RoomModule } from "modules/room/room.module";
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Message]), RoomModule],
   controllers: [MessageController],
-  providers: [
-    {
-      provide: MESSAGE_REPO,
-      useFactory: (dataSource: DataSource) => dataSource.getRepository(Message),
-      inject: [DATA_SOURCE],
-    },
-    MessageService,
-  ],
+  providers: [MessageService],
   exports: [MessageService],
 })
 export class MessageModule {}

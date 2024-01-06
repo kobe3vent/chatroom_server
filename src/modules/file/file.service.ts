@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  Inject,
   HttpException,
   HttpStatus,
   ForbiddenException,
@@ -9,9 +8,9 @@ import {
 import { File } from "./entities/file.entity";
 import { Multer } from "multer";
 import { TypeOrmCrudService } from "@rewiko/crud-typeorm";
-import { FILE_REPO } from "constants/repositories";
 import { User } from "modules/user/user.entity";
 import { getFromMinio, removeFromMinio, uploadToMinio } from "./minio.service";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class FileService extends TypeOrmCrudService<File> {
@@ -21,7 +20,7 @@ export class FileService extends TypeOrmCrudService<File> {
     "image/png": "png",
     "application/pdf": "pdf",
   };
-  constructor(@Inject(FILE_REPO) repo) {
+  constructor(@InjectRepository(File) repo) {
     super(repo);
   }
 
