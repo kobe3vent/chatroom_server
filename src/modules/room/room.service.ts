@@ -17,6 +17,6 @@ export class RoomService extends TypeOrmCrudService<Room> {
       members: [...new Set([user, ...room.members])],
     };
 
-    return this.repo.save(data);
+    return this.repo.save(this.repo.create(data));
   }
 }

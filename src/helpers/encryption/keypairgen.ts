@@ -25,7 +25,7 @@ export const generatePrivatePublicKeys = (): Promise<{
           type: "pkcs8",
           format: "pem",
           cipher: "aes-256-cbc",
-          // passphrase: process.env.RSA_PASSPHRASE,
+          passphrase: process.env.RSA_PASSPHRASE,
         },
       },
       (err, publicKey, privateKey) => {
@@ -59,6 +59,7 @@ export const decryptWithPrivatekey = (
       key: privateKey,
       padding: constants.RSA_PKCS1_OAEP_PADDING,
       oaepHash: "sha256",
+      passphrase: process.env.RSA_PASSPHRASE,
     },
     encryptedData
   ).toString();
@@ -69,6 +70,7 @@ export const encryptWithPrivateKey = (data: string, privateKey: string) =>
       key: privateKey,
       padding: constants.RSA_PKCS1_OAEP_PADDING,
       oaepHash: "sha256",
+      passphrase: process.env.RSA_PASSPHRASE,
     },
     Buffer.from(data)
   );

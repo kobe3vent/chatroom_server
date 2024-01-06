@@ -31,7 +31,7 @@ export class Room extends AbstractEntity {
 
   //HOOK
   @BeforeInsert()
-  async hashPassword(): Promise<void> {
+  async generateKeyPairs(): Promise<void> {
     const { publicKey, privateKey } = await generatePrivatePublicKeys();
     this.publicKey = publicKey;
     this.privateKey = privateKey;

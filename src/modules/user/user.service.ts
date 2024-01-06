@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { TypeOrmCrudService } from "@rewiko/crud-typeorm";
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";

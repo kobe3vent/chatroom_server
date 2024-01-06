@@ -29,7 +29,7 @@ export class User extends AbstractEntity {
   status: UserStatus;
 
   @BeforeInsert()
-  async hashPassword(): Promise<void> {
+  hashPassword(): void {
     this.password = generateHash(this.password);
   }
 
