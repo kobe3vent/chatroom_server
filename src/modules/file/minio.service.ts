@@ -37,7 +37,7 @@ export const uploadToMinio = async (
           console.log("trouble writing to file: ", err);
           return reject(new Error(JSON.stringify(err)));
         }
-        console.log("Success", objInfo);
+
         const data = { ...objInfo, name: fileName };
         return resolve(data);
       }

@@ -1,21 +1,13 @@
-import { Module } from '@nestjs/common';
-import { RoomService } from './room.service';
-import { RoomController } from './room.controller';
-import { DatabaseModule } from 'modules/db/db.module';
-import { DATA_SOURCE, ROOM_REPO } from 'constants/repositories';
-import { DataSource } from 'typeorm';
-import { Room } from './room.entity';
+import { Module } from "@nestjs/common";
+import { RoomService } from "./room.service";
+import { RoomController } from "./room.controller";
+import { Room } from "./room.entity";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Room])],
   controllers: [RoomController],
-  providers: [
-    {
-      provide: ROOM_REPO,
-      useFactory: (dataSource: DataSource) => dataSource.getRepository(Room),
-      inject: [DATA_SOURCE],
-    }, 
-    RoomService],
-    exports: [RoomService]
+  providers: [RoomService],
+  exports: [RoomService],
 })
 export class RoomModule {}
