@@ -16,10 +16,10 @@ export class User extends AbstractEntity {
   @IsOptional({ groups: [UPDATE] })
   email: string;
 
-  @Column({ type: "varchar", unique: true })
+  @Column({ type: "text", unique: true })
   username: string;
 
-  @Column({ type: "varchar", select: false })
+  @Column({ type: "text", select: false })
   password: string;
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.USER })

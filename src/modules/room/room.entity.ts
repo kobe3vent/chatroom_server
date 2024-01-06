@@ -16,17 +16,17 @@ import {
 @Entity()
 export class Room extends AbstractEntity {
   @IsString()
-  @Column({ type: "varchar" })
+  @Column({ type: "text" })
   name: string;
 
   @Column({ type: "boolean", default: true })
   isActive: boolean;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "text" })
   publicKey: string;
 
   @Exclude()
-  @Column({ type: "varchar" })
+  @Column({ type: "text" })
   privateKey: string;
 
   //HOOK

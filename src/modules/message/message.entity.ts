@@ -23,11 +23,11 @@ export enum MessageType {
 
 @Entity()
 export class Message extends AbstractEntity {
-  @Column({ type: "varchar", nullable: true })
+  @Column({ type: "text", nullable: true })
   subject: string;
 
   @IsNotEmpty()
-  @Column({ type: "varchar" })
+  @Column({ type: "text" })
   body: string;
 
   @Column({ type: "enum", enum: MessageType, default: MessageType.TEXT })

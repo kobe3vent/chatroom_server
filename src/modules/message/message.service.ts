@@ -1,12 +1,12 @@
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { Message } from "./message.entity";
 import { TypeOrmCrudService } from "@rewiko/crud-typeorm";
-import { MESSAGE_REPO } from "constants/repositories";
 import { User } from "modules/user/user.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class MessageService extends TypeOrmCrudService<Message> {
-  constructor(@Inject(MESSAGE_REPO) repo) {
+  constructor(@InjectRepository(Message) repo) {
     super(repo);
   }
 
